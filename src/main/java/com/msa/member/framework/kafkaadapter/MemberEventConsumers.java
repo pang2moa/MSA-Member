@@ -23,20 +23,20 @@ public class MemberEventConsumers {
     private final SavePointUsecase savePointUsecase;
     private final UsePointUsecase usePointUsecase;
     private final MemberEventProducer eventProducer;
-
-    @KafkaListener(topics="${consumer.topic1.name}",groupId = "${consumer.groupid.name}")
+    
+    @KafkaListener(topics="${kafka.topics.producer.rental-rent}",groupId = "${spring.kafka.consumer.group-id}")
     public void consumeRent(ConsumerRecord<String, String> record) throws IOException {
         System.out.printf("rental_rent:"+ record.value());
         ItemRented itemRented = objectMapper.readValue(record.value(), ItemRented.class);
         savePointUsecase.savePoint(itemRented.getIdName(),itemRented.getPoint());
     }
-    @KafkaListener(topics="${consumer.topic2.name}",groupId = "${consumer.groupid.name}")
+    @KafkaListener(topics="${kafka.topics.producer.rental-return}",groupId = "${spring.kafka.consumer.group-id}")
     public void consumeReturn(ConsumerRecord<String, String> record) throws IOException{
         System.out.printf("rental_return:"+ record.value());
         ItemReturned itemReturned = objectMapper.readValue(record.value(), ItemReturned.class);
         savePointUsecase.savePoint(itemReturned.getIdName(),itemReturned.getPoint());
     }
-    @KafkaListener(topics="${consumer.topic3.name}",groupId = "${consumer.groupid.name}")
+    @KafkaListener(topics="${kafka.topics.producer.overdue-clear}",groupId = "${spring.kafka.consumer.group-id}")
     public void consumeClear(ConsumerRecord<String, String> record) throws Exception {
         OverdueCleared overdueCleared = objectMapper.readValue(record.value(), OverdueCleared.class);
 
@@ -57,8 +57,8 @@ public class MemberEventConsumers {
         }
         eventProducer.occurEvent(eventResult);
     }
-
-    @KafkaListener(topics="${consumer.topic4.name}",groupId = "${consumer.groupid.name}")
+    
+    @KafkaListener(topics="${kafka.topics.producer.point-use}",groupId = "${spring.kafka.consumer.group-id}")
     public void consumeUsePoint(ConsumerRecord<String, String> record) throws Exception {
         System.out.printf(record.value());
         PointUseCommand pointUseCommand = objectMapper.readValue(record.value(), PointUseCommand.class);

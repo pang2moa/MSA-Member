@@ -1,5 +1,5 @@
 # 기반이 될 도커 이미지 선택 (여기서는 OpenJDK 11 사용)
-FROM openjdk:15-jdk-alpine
+FROM amazoncorretto:11.0.23
 # 빌드된 스프링 부트 JAR 파일을 복사
 COPY target/*SNAPSHOT.jar app.jar
 # 컨테이너가 실행될 포트 지정

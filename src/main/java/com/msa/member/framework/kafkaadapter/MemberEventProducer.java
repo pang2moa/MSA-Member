@@ -16,7 +16,7 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 @RequiredArgsConstructor
 public class MemberEventProducer {
 
-    @Value(value = "${producers.topic1.name}")
+    @Value(value = "${kafka.topics.consumer.rental-result}")
     private  String TOPIC;
     private final KafkaTemplate<String, EventResult> kafkaTemplate;
 

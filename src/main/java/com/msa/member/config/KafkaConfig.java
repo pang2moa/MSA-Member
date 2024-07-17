@@ -1,8 +1,9 @@
 package com.msa.member.config;
 
+import com.msa.member.domain.model.event.EventResult;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
@@ -16,20 +17,29 @@ import java.util.Map;
 @Configuration
 public class KafkaConfig {
 
-    @Value(value = "${kafka.bootstrapAddress}")
-    private String BOOTSTRAPSERVERS;
-    @Bean
-    public ProducerFactory<String, String> producerFactory()
-    {
-        Map<String, Object> config = new HashMap<>();
-        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAPSERVERS);
-        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-        return new DefaultKafkaProducerFactory<>(config);
+    private final KafkaProperties kafkaProperties;
+
+    public KafkaConfig(KafkaProperties kafkaProperties) {
+        this.kafkaProperties = kafkaProperties;
     }
+
     @Bean
-    public KafkaTemplate kafkaTemplate()
-    {
+    public ProducerFactory<String, String> producerFactory() {
+        Map<String, Object> configProps = new HashMap<>(kafkaProperties.buildProducerProperties());
+
+        // Explicitly set serializers if not already set in properties
+        if (!configProps.containsKey(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG)) {
+            configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        }
+        if (!configProps.containsKey(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG)) {
+            configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        }
+
+        return new DefaultKafkaProducerFactory<>(configProps);
+    }
+
+    @Bean
+    public KafkaTemplate kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 }

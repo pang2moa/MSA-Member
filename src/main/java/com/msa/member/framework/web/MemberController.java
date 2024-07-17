@@ -17,7 +17,7 @@ public class MemberController {
     private final AddMemberUsecase addMemberUsecase;
     private final InquiryMemberUsecase inquiryMemberUsecase;
 
-    @PostMapping("/Member/")
+    @PostMapping("/Member")
     public ResponseEntity<MemberOutPutDTO> addMember(@RequestBody MemberInfoDTO memberInfoDTO) {
         MemberOutPutDTO addedMember = addMemberUsecase.addMember(memberInfoDTO);
         return new ResponseEntity<>(addedMember, HttpStatus.CREATED);

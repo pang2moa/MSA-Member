@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class MemberOutPutDTO {
+    private Long memberNo;
     private String id;
     private String Name;
     private String passWord;
@@ -20,6 +21,7 @@ public class MemberOutPutDTO {
 
     public static  MemberOutPutDTO mapToDTO(Member member){
         MemberOutPutDTO meberOutPutDTO = new MemberOutPutDTO();
+        meberOutPutDTO.setMemberNo(member.getMemberNo());
         meberOutPutDTO.setId(member.getIdName().getId());
         meberOutPutDTO.setName(member.getIdName().getName());
         meberOutPutDTO.setPassWord(member.getPassword().getPresentPWD());

@@ -1,0 +1,354 @@
+{
+  "info": {
+    "_postman_id": "unique-uuid-here",
+    "name": "도서관 서비스 테스트",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "회원등록",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n \"email\": \"scant10@gmail.com\",\n \"id\": \"jenny\",\n \"name\": \"제니\",\n \"passWord\": \"1111\"\n}"
+        },
+        "url": {
+          "raw": "{{memberServiceUrl}}/api/Member/",
+          "host": ["{{memberServiceUrl}}"],
+          "path": ["api", "Member", ""]
+        }
+      }
+    },
+    {
+      "name": "도서 등록",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n \"author\": \"훼밍웨이\",\n \"classfication\": \"LITERATURE\",\n \"description\": \"고전 소설\",\n \"isbn\": \"1232141214\",\n \"location\": \"JEONGJA\",\n \"publicationDate\": \"2023-02-11\",\n \"source\": \"SUPPLY\",\n \"title\": \"누구를 위하여 종을 울리나?\"\n}"
+        },
+        "url": {
+          "raw": "{{bookServiceUrl}}/api/book",
+          "host": ["{{bookServiceUrl}}"],
+          "path": ["api", "book"]
+        }
+      }
+    },
+    {
+      "name": "도서 상태 확인 (입고)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          }
+        ],
+        "url": {
+          "raw": "{{bookServiceUrl}}/api/book/1",
+          "host": ["{{bookServiceUrl}}"],
+          "path": ["api", "book", "1"]
+        }
+      }
+    },
+    {
+      "name": "도서 카드 생성",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n \"UserId\": \"jenny\",\n \"UserNm\": \"제니\"\n}"
+        },
+        "url": {
+          "raw": "{{rentalServiceUrl}}/api/RentalCard/",
+          "host": ["{{rentalServiceUrl}}"],
+          "path": ["api", "RentalCard", ""]
+        }
+      }
+    },
+    {
+      "name": "도서 대여",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n \"itemId\": 1,\n \"itemTitle\": \"누구를 위하여 종을 울리나?\",\n \"userId\": \"jenny\",\n \"userNm\": \"제니\"\n}"
+        },
+        "url": {
+          "raw": "{{rentalServiceUrl}}/api/RentalCard/rent",
+          "host": ["{{rentalServiceUrl}}"],
+          "path": ["api", "RentalCard", "rent"]
+        }
+      }
+    },
+    {
+      "name": "도서 상태 확인(대여불가)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          }
+        ],
+        "url": {
+          "raw": "{{bookServiceUrl}}/api/book/1",
+          "host": ["{{bookServiceUrl}}"],
+          "path": ["api", "book", "1"]
+        }
+      }
+    },
+    {
+      "name": "회원 포인트 확인(+)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          }
+        ],
+        "url": {
+          "raw": "{{memberServiceUrl}}/api/Member/1",
+          "host": ["{{memberServiceUrl}}"],
+          "path": ["api", "Member", "1"]
+        }
+      }
+    },
+    {
+      "name": "베스트 상품 추가 확인",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          }
+        ],
+        "url": {
+          "raw": "{{bestSellerServiceUrl}}/api/books",
+          "host": ["{{bestSellerServiceUrl}}"],
+          "path": ["api", "books"]
+        }
+      }
+    },
+    {
+      "name": "1번째 도서 반납",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n \"itemId\": 1,\n \"itemTitle\": \"누구를 위하여 종을 울리나?\",\n \"userId\": \"jenny\",\n \"userNm\": \"제니\"\n}"
+        },
+        "url": {
+          "raw": "{{rentalServiceUrl}}/api/RentalCard/return",
+          "host": ["{{rentalServiceUrl}}"],
+          "path": ["api", "RentalCard", "return"]
+        }
+      }
+    },
+    {
+      "name": "2번째 도서 등록",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n \"author\": \"최재천\",\n \"classfication\": \"LITERATURE\",\n \"description\": \"최재천의 인생공부\",\n \"isbn\": \"1232141214\",\n \"location\": \"JEONGJA\",\n \"publicationDate\": \"2023-01-11\",\n \"source\": \"SUPPLY\",\n \"title\": \"최재천의공부\"\n}"
+        },
+        "url": {
+          "raw": "{{bookServiceUrl}}/api/book",
+          "host": ["{{bookServiceUrl}}"],
+          "path": ["api", "book"]
+        }
+      }
+    },
+    {
+      "name": "도서 연체",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n \"itemId\": 2,\n \"itemTitle\": \"최재천의공부\",\n \"userId\": \"jenny\",\n \"userNm\": \"제니\"\n}"
+        },
+        "url": {
+          "raw": "{{rentalServiceUrl}}/api/RentalCard/overdue",
+          "host": ["{{rentalServiceUrl}}"],
+          "path": ["api", "RentalCard", "overdue"]
+        }
+      }
+    },
+    {
+      "name": "도서카드 상태 확인",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          }
+        ],
+        "url": {
+          "raw": "{{rentalServiceUrl}}/api/RentalCard/jenny",
+          "host": ["{{rentalServiceUrl}}"],
+          "path": ["api", "RentalCard", "jenny"]
+        }
+      }
+    },
+    {
+      "name": "연체도서반납",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n \"itemId\": 2,\n \"itemTitle\": \"최재천의공부\",\n \"userId\": \"jenny\",\n \"userNm\": \"제니\"\n}"
+        },
+        "url": {
+          "raw": "{{rentalServiceUrl}}/api/RentalCard/return",
+          "host": ["{{rentalServiceUrl}}"],
+          "path": ["api", "RentalCard", "return"]
+        }
+      }
+    },
+    {
+      "name": "대여정지해제 처리",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n \"UserId\": \"jenny\",\n \"UserNm\": \"제니\",\n \"point\": 10\n}"
+        },
+        "url": {
+          "raw": "{{rentalServiceUrl}}/api/RentalCard/clearoverdue",
+          "host": ["{{rentalServiceUrl}}"],
+          "path": ["api", "RentalCard", "clearoverdue"]
+        }
+      }
+    },
+    {
+      "name": "회원정보 조회",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "accept",
+            "value": "*/*"
+          }
+        ],
+        "url": {
+          "raw": "{{memberServiceUrl}}/api/Member/1",
+          "host": ["{{memberServiceUrl}}"],
+          "path": ["api", "Member", "1"]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "memberServiceUrl",
+      "value": "http://localhost:8083"
+    },
+    {
+      "key": "bookServiceUrl",
+      "value": "http://localhost:8082"
+    },
+    {
+      "key": "rentalServiceUrl",
+      "value": "http://localhost:8081"
+    },
+    {
+      "key": "bestSellerServiceUrl",
+      "value": "http://localhost:8084"
+    }
+  ]
+}

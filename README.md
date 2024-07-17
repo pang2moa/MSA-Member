@@ -9,7 +9,10 @@
     mvn clean package 
     ```
 
- 
+- docker-compose 실행
+  ```
+  docker-compose -f docker-compose-infra_only.yml up -d
+  ```
 
 - 도메인 모델 클래스도  
 

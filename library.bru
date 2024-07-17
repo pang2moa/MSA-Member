@@ -1,0 +1,181 @@
+vars {
+  memberServiceUrl: http://localhost:8083
+  bookServiceUrl: http://localhost:8082
+  rentalServiceUrl: http://localhost:8081
+  bestSellerServiceUrl: http://localhost:8084
+}
+
+meta {
+  name: 도서관 서비스 테스트
+  type: collection
+}
+
+# 회원등록
+post {
+  name: 회원등록
+  url: {{memberServiceUrl}}/api/Member/
+  body: json
+}
+headers {
+  accept: */*
+  Content-Type: application/json
+}
+body:json {
+  {
+    "email": "scant10@gmail.com",
+    "id": "jenny",
+    "name": "제니",
+    "passWord": "1111"
+  }
+}
+
+# 도서등록
+post {
+  name: 도서등록
+  url: {{bookServiceUrl}}/api/book
+  body: json
+}
+headers {
+  accept: */*
+  Content-Type: application/json
+}
+body:json {
+  {
+    "author": "훼밍웨이",
+    "classfication": "LITERATURE",
+    "description": "고전 소설",
+    "isbn": "1232141214",
+    "location": "JEONGJA",
+    "publicationDate": "2023-02-11",
+    "source": "SUPPLY",
+    "title": "누구를 위하여 종을 울리나?"
+  }
+}
+
+# 도서상태확인
+get {
+  name: 도서상태확인
+  url: {{bookServiceUrl}}/api/book/1
+}
+headers {
+  accept: */*
+}
+
+# 도서카드생성
+post {
+  name: 도서카드생성
+  url: {{rentalServiceUrl}}/api/RentalCard/
+  body: json
+}
+headers {
+  accept: */*
+  Content-Type: application/json
+}
+body:json {
+  {
+    "UserId": "jenny",
+    "UserNm": "제니"
+  }
+}
+
+# 도서대여
+post {
+  name: 도서대여
+  url: {{rentalServiceUrl}}/api/RentalCard/rent
+  body: json
+}
+headers {
+  accept: */*
+  Content-Type: application/json
+}
+body:json {
+  {
+    "itemId": 1,
+    "itemTitle": "누구를 위하여 종을 울리나?",
+    "userId": "jenny",
+    "userNm": "제니"
+  }
+}
+
+# 회원포인트확인
+get {
+  name: 회원포인트확인
+  url: {{memberServiceUrl}}/api/Member/1
+}
+headers {
+  accept: */*
+}
+
+# 베스트상품확인
+get {
+  name: 베스트상품확인
+  url: {{bestSellerServiceUrl}}/api/books
+}
+headers {
+  accept: */*
+}
+
+# 도서반납
+post {
+  name: 도서반납
+  url: {{rentalServiceUrl}}/api/RentalCard/return
+  body: json
+}
+headers {
+  accept: */*
+  Content-Type: application/json
+}
+body:json {
+  {
+    "itemId": 1,
+    "itemTitle": "누구를 위하여 종을 울리나?",
+    "userId": "jenny",
+    "userNm": "제니"
+  }
+}
+
+# 도서연체
+post {
+  name: 도서연체
+  url: {{rentalServiceUrl}}/api/RentalCard/overdue
+  body: json
+}
+headers {
+  accept: */*
+  Content-Type: application/json
+}
+body:json {
+  {
+    "itemId": 2,
+    "itemTitle": "최재천의공부",
+    "userId": "jenny",
+    "userNm": "제니"
+  }
+}
+
+# 도서카드상태확인
+get {
+  name: 도서카드상태확인
+  url: {{rentalServiceUrl}}/api/RentalCard/jenny
+}
+headers {
+  accept: */*
+}
+
+# 대여정지해제
+post {
+  name: 대여정지해제
+  url: {{rentalServiceUrl}}/api/RentalCard/clearoverdue
+  body: json
+}
+headers {
+  accept: */*
+  Content-Type: application/json
+}
+body:json {
+  {
+    "UserId": "jenny",
+    "UserNm": "제니",
+    "point": 10
+  }
+}
