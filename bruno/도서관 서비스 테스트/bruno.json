@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "도서관 서비스 테스트",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

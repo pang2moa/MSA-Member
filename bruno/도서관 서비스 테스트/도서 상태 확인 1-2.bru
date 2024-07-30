@@ -1,0 +1,15 @@
+meta {
+  name: 도서 상태 확인 1-2
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{bookServiceUrl}}/api/book/{{bookNo}}
+  body: none
+  auth: none
+}
+
+headers {
+  accept: */*
+}

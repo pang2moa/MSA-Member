@@ -1,0 +1,15 @@
+meta {
+  name: 회원 포인트 확인 1
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{memberServiceUrl}}/api/Member/{{memberNo}}
+  body: none
+  auth: none
+}
+
+headers {
+  accept: */*
+}

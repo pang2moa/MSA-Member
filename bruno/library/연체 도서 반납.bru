@@ -1,0 +1,25 @@
+meta {
+  name: 연체 도서 반납
+  type: http
+  seq: 18
+}
+
+post {
+  url: {{rentalServiceUrl}}/api/RentalCard/return
+  body: json
+  auth: none
+}
+
+headers {
+  accept: */*
+  Content-Type: application/json
+}
+
+body:json {
+  {
+   "itemId": 2,
+   "itemTitle": "최재천의공부",
+   "userId": "jenny",
+   "userNm": "제니"
+  }
+}

@@ -1,0 +1,23 @@
+meta {
+  name: 도서 카드 생성
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{rentalServiceUrl}}/api/RentalCard/
+  body: json
+  auth: none
+}
+
+headers {
+  accept: */*
+  Content-Type: application/json
+}
+
+body:json {
+  {
+   "UserId": "{{userId}}",
+   "UserNm": "제니"
+  }
+}

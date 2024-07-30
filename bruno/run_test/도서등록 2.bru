@@ -1,0 +1,29 @@
+meta {
+  name: 도서등록 2
+  type: http
+  seq: 12
+}
+
+post {
+  url: {{bookServiceUrl}}/api/book
+  body: json
+  auth: none
+}
+
+headers {
+  accept: */*
+  Content-Type: application/json
+}
+
+body:json {
+  {
+   "author": "최재천",
+   "classfication": "LITERATURE",
+   "description": "최재천의 인생공부",
+   "isbn": "1232141214",
+   "location": "JEONGJA",
+   "publicationDate": "2023-01-11",
+   "source": "SUPPLY",
+   "title": "최재천의공부"
+  }
+}

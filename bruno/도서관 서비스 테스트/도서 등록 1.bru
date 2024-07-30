@@ -1,0 +1,50 @@
+meta {
+  name: 도서 등록 1
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{bookServiceUrl}}/api/book
+  body: json
+  auth: none
+}
+
+headers {
+  accept: */*
+  Content-Type: application/json
+}
+
+body:json {
+  {
+   "author": "훼밍웨이",
+   "classfication": "LITERATURE",
+   "description": "고전 소설",
+   "isbn": "1232141214",
+   "location": "JEONGJA",
+   "publicationDate": "2023-02-11",
+   "source": "SUPPLY",
+   "title": "누구를 위하여 종을 울리나?"
+  } 
+}
+
+script:pre-request {
+  bru.setEnvVar("bookNo", 0);
+}
+
+script:post-response {
+  // Post-request Script
+  try {
+    console.log(res.getBody());
+    const responseBody = res.getBody();
+    if (responseBody && responseBody.bookNo) {
+      bru.setEnvVar("bookNo", responseBody.bookNo.toString());
+      bru.setEnvVar("bookTitle", responseBody.bookTitle.toString());
+      console.log(`도서 번호 ${responseBody.bookNo}가 환경 변수로 저장되었습니다.`);
+    } else {
+      console.log("응답에 bookNo가 없습니다.");
+    }
+  } catch (error) {
+    console.error("스크립트 실행 중 오류 발생:", error);
+  }
+}

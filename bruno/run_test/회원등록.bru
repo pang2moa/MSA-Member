@@ -1,0 +1,45 @@
+meta {
+  name: 회원등록
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{memberServiceUrl}}/api/Member/
+  body: json
+  auth: none
+}
+
+headers {
+  accept: */*
+  Content-Type: application/json
+}
+
+body:json {
+  {
+   "email": "scant10@gmail.com",
+   "id": "jenny",
+   "name": "제니",
+   "passWord": "1111"
+  }
+}
+
+script:pre-request {
+  bru.setEnvVar("memberNo", 0);
+}
+
+script:post-response {
+  // Post-request Script
+  try {
+    console.log(res.getBody());
+    const responseBody = res.getBody();
+    if (responseBody && responseBody.memberNo) {
+      bru.setEnvVar("memberNo", responseBody.memberNo.toString());
+      console.log(`멤버 번호 ${responseBody.memberNo}가 환경 변수로 저장되었습니다.`);
+    } else {
+      console.log("응답에 memberNo가 없습니다.");
+    }
+  } catch (error) {
+    console.error("스크립트 실행 중 오류 발생:", error);
+  }
+}

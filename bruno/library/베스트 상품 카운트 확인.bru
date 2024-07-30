@@ -1,0 +1,15 @@
+meta {
+  name: 베스트 상품 카운트 확인
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{bestSellerServiceUrl}}/api/books
+  body: none
+  auth: none
+}
+
+headers {
+  accept: */*
+}

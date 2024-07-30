@@ -1,0 +1,25 @@
+meta {
+  name: 도서 연체
+  type: http
+  seq: 16
+}
+
+post {
+  url: {{rentalServiceUrl}}/api/RentalCard/overdue
+  body: json
+  auth: none
+}
+
+headers {
+  accept: */*
+  Content-Type: application/json
+}
+
+body:json {
+  {
+   "itemId": {{bookNo2}},
+   "itemTitle": "{{bookTitle2}}",
+   "userId": "{{userId}}",
+   "userNm": "{{userName}}"
+  }
+}

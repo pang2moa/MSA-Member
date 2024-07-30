@@ -1,0 +1,25 @@
+meta {
+  name: 도서 대여 1
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{rentalServiceUrl}}/api/RentalCard/rent
+  body: json
+  auth: none
+}
+
+headers {
+  accept: */*
+  Content-Type: application/json
+}
+
+body:json {
+  {
+   "itemId": {{bookNo}},
+   "itemTitle": "{{bookTitle}}",
+   "userId": "{{userId}}",
+   "userNm": "{{userName}}"
+  }
+}

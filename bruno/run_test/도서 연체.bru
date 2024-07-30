@@ -1,0 +1,24 @@
+meta {
+  name: 도서 연체
+  type: http
+  seq: 16
+}
+
+post {
+  url: {{rentalServiceUrl}}/api/RentalCard/clearoverdue
+  body: json
+  auth: none
+}
+
+headers {
+  accept: */*
+  Content-Type: application/json
+}
+
+body:json {
+  {
+   "UserId": "jenny",
+   "UserNm": "제니",
+   "point": 10
+  }
+}

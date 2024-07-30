@@ -1,0 +1,25 @@
+meta {
+  name: 도서 대여 2
+  type: http
+  seq: 13
+}
+
+post {
+  url: {{rentalServiceUrl}}/api/RentalCard/overdue
+  body: json
+  auth: none
+}
+
+headers {
+  accept: */*
+  Content-Type: application/json
+}
+
+body:json {
+  {
+   "itemId": 2,
+   "itemTitle": "최재천의공부",
+   "userId": "jenny",
+   "userNm": "제니"
+  }
+}

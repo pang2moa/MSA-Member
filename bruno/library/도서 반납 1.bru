@@ -1,0 +1,25 @@
+meta {
+  name: 도서 반납 1
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{rentalServiceUrl}}/api/RentalCard/return
+  body: json
+  auth: none
+}
+
+headers {
+  accept: */*
+  Content-Type: application/json
+}
+
+body:json {
+  {
+   "itemId": 1,
+   "itemTitle": "누구를 위하여 종을 울리나?",
+   "userId": "jenny",
+   "userNm": "제니"
+  }
+}

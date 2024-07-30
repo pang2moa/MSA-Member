@@ -1,0 +1,15 @@
+meta {
+  name: 도서 카드 확인
+  type: http
+  seq: 17
+}
+
+get {
+  url: {{rentalServiceUrl}}/api/RentalCard/{{userId}}
+  body: none
+  auth: none
+}
+
+headers {
+  accept: */*
+}
