@@ -9,7 +9,7 @@ public class GlobalCorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000", "http://222.108.42.200:3000/", "http://222.108.42.200/") // Next.js 앱의 URL
+                .allowedOrigins("*") // Next.js 앱의 URL
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
