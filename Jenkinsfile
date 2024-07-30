@@ -4,119 +4,38 @@ pipeline {
     environment {
         APP_NAME = 'MSA-Member'
         DEPLOY_PATH = '/opt/springapps/MSA-Member'
-        JENKINS_USER = 'appuser'
+        JENKINS_USER = 'appuser'  // 실제 Jenkins 실행 사용자 이름으로 변경하세요
     }
     
     stages {
-        stage('Preparation') {
-            steps {
-                script {
-                    echo "Starting pipeline for ${APP_NAME}"
-                    sh 'java -version'
-                    sh 'mvn -version'
-                }
-            }
-        }
-        
-        stage('Checkout') {
-            steps {
-                script {
-                    try {
-                        checkout scm
-                        echo "Checkout successful"
-                    } catch (Exception e) {
-                        echo "Checkout failed: ${e.getMessage()}"
-                        error "Checkout stage failed"
-                    }
-                }
-            }
-        }
-        
         stage('Build') {
             steps {
                 script {
-                    try {
-                        sh 'mvn clean package -DskipTests'
-                        echo "Build successful"
-                    } catch (Exception e) {
-                        echo "Build failed: ${e.getMessage()}"
-                        error "Build stage failed"
-                    }
+                    // Maven build 명령 추가 (필요한 경우)
+                    sh 'mvn clean package -DskipTests'
                 }
             }
         }
         
-        stage('Terminate Existing Processes') {
-            steps {
-                script {
-                    try {
-                        def processFound = false
-                        def result = sh(script: "pgrep -f '${DEPLOY_PATH}/${APP_NAME}.jar'", returnStatus: true)
-                        
-                        if (result == 0) {
-                            processFound = true
-                            sh """
-                                PIDs=\$(pgrep -f '${DEPLOY_PATH}/${APP_NAME}.jar')
-                                echo "Found processes: \$PIDs"
-                                for PID in \$PIDs
-                                do
-                                    echo "Attempting to stop process \$PID"
-                                    kill \$PID
-                                    sleep 5
-                                    if ps -p \$PID > /dev/null; then
-                                        echo "Process \$PID did not stop, attempting force kill"
-                                        kill -9 \$PID
-                                    fi
-                                done
-                            """
-                        } else {
-                            echo "No processes found for ${APP_NAME}"
-                        }
-
-                        // 모든 프로세스가 종료되었는지 다시 확인
-                        result = sh(script: "pgrep -f '${DEPLOY_PATH}/${APP_NAME}.jar'", returnStatus: true)
-                        if (result == 0) {
-                            error "Failed to terminate all processes for ${APP_NAME}"
-                        } else {
-                            echo "All processes for ${APP_NAME} have been terminated successfully"
-                        }
-                    } catch (Exception e) {
-                        echo "Error during process termination: ${e.getMessage()}"
-                        error "Process termination stage failed"
-                    }
-                }
-            }
-        }
-        
-         stage('Prepare Deploy Directory') {
-            steps {
-                script {
-                    sh """
-                        if [ ! -d "${DEPLOY_PATH}" ]; then
-                            echo "Creating deploy directory: ${DEPLOY_PATH}"
-                            sudo mkdir -p ${DEPLOY_PATH}
-                            sudo cp ${jarFile.path} ${DEPLOY_PATH}/${APP_NAME}.jar
-                            sudo chown ${JENKINS_USER}:${JENKINS_USER} ${DEPLOY_PATH}/${APP_NAME}.jar
-                            sudo chmod 755 ${DEPLOY_PATH}/${APP_NAME}.jar
-                        else
-                            echo "Deploy directory already exists: ${DEPLOY_PATH}"
-                        fi
-                    """
-                }
-            }
-        }
-
         stage('Deploy') {
             steps {
                 script {
                     try {
-                        def jarFile = findFiles(glob: 'target/*.jar')[0]
-                        sh "cp ${jarFile.path} ${DEPLOY_PATH}/${APP_NAME}.jar"
+                        def jarFiles = findFiles(glob: 'target/*.jar')
+                        if (jarFiles.length == 0) {
+                            error "No JAR files found in target directory"
+                        }
+                        def jarFile = jarFiles[0]
+                        echo "Found JAR file: ${jarFile.name}"
+                        
                         sh """
-                            nohup java -jar ${DEPLOY_PATH}/${APP_NAME}.jar > ${DEPLOY_PATH}/${APP_NAME}.log 2>&1 &
-                            echo \$! > ${DEPLOY_PATH}/${APP_NAME}.pid
+                            sudo mkdir -p ${DEPLOY_PATH}
+                            sudo cp ${jarFile.path} ${DEPLOY_PATH}/${APP_NAME}.jar
+                            sudo chown ${JENKINS_USER}:${JENKINS_USER} ${DEPLOY_PATH}/${APP_NAME}.jar
+                            sudo chmod 755 ${DEPLOY_PATH}/${APP_NAME}.jar
                         """
-                        echo "Deployment successful"
+                        
+                        echo "JAR file deployed successfully"
                     } catch (Exception e) {
                         echo "Deployment failed: ${e.getMessage()}"
                         error "Deployment stage failed"
@@ -128,21 +47,8 @@ pipeline {
         stage('Verify Deployment') {
             steps {
                 script {
-                    try {
-                        sh """
-                            sleep 10
-                            if ps -p \$(cat ${DEPLOY_PATH}/${APP_NAME}.pid) > /dev/null; then
-                                echo "${APP_NAME} is running"
-                            else
-                                echo "${APP_NAME} is not running"
-                                exit 1
-                            fi
-                        """
-                        echo "Deployment verification successful"
-                    } catch (Exception e) {
-                        echo "Deployment verification failed: ${e.getMessage()}"
-                        error "Deployment verification stage failed"
-                    }
+                    sh "ls -l ${DEPLOY_PATH}/${APP_NAME}.jar"
+                    echo "Deployment verified"
                 }
             }
         }
