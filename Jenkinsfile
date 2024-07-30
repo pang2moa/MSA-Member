@@ -48,9 +48,9 @@ pipeline {
                 script {
                     try {
                         sh """
-                            sudo pkill -f ${APP_NAME}.jar || true
-                            sudo -u ${JENKINS_USER} nohup java -jar ${DEPLOY_PATH}/${APP_NAME}.jar > ${DEPLOY_PATH}/${APP_NAME}.log 2>&1 &
-                            echo \$! > ${DEPLOY_PATH}/${APP_NAME}.pid
+                            sudo -n pkill -f ${APP_NAME}.jar || true
+                            sudo -n -u ${JENKINS_USER} nohup java -jar ${DEPLOY_PATH}/${APP_NAME}.jar > ${DEPLOY_PATH}/${APP_NAME}.log 2>&1 &
+                            echo \$! | sudo -n tee ${DEPLOY_PATH}/${APP_NAME}.pid > /dev/null
                         """
                         echo "Application started successfully"
                     } catch (Exception e) {
@@ -65,6 +65,7 @@ pipeline {
             steps {
                 script {
                     sh "ls -l ${DEPLOY_PATH}/${APP_NAME}.jar"
+                    sh "sudo -n cat ${DEPLOY_PATH}/${APP_NAME}.pid"
                     sh "ps aux | grep ${APP_NAME}.jar"
                     echo "Deployment verified"
                 }
