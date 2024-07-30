@@ -86,26 +86,40 @@ pipeline {
                 }
             }
         }
-
         
-        stage('Deploy') {
-            steps {
-                script {
-                    try {
-                        def jarFile = findFiles(glob: 'target/*.jar')[0]
-                        sh "cp ${jarFile.path} ${DEPLOY_PATH}/${APP_NAME}.jar"
-                        sh """
-                            nohup java -jar ${DEPLOY_PATH}/${APP_NAME}.jar > ${DEPLOY_PATH}/${APP_NAME}.log 2>&1 &
-                            echo \$! > ${DEPLOY_PATH}/${APP_NAME}.pid
-                        """
-                        echo "Deployment successful"
-                    } catch (Exception e) {
-                        echo "Deployment failed: ${e.getMessage()}"
-                        error "Deployment stage failed"
+         stage('Prepare Deploy Directory') {
+                    steps {
+                        script {
+                            sh """
+                                if [ ! -d "${DEPLOY_PATH}" ]; then
+                                    echo "Creating deploy directory: ${DEPLOY_PATH}"
+                                    mkdir -p ${DEPLOY_PATH}
+                                else
+                                    echo "Deploy directory already exists: ${DEPLOY_PATH}"
+                                fi
+                            """
+                        }
                     }
                 }
-            }
-        }
+        
+                stage('Deploy') {
+                    steps {
+                        script {
+                            try {
+                                def jarFile = findFiles(glob: 'target/*.jar')[0]
+                                sh "cp ${jarFile.path} ${DEPLOY_PATH}/${APP_NAME}.jar"
+                                sh """
+                                    nohup java -jar ${DEPLOY_PATH}/${APP_NAME}.jar > ${DEPLOY_PATH}/${APP_NAME}.log 2>&1 &
+                                    echo \$! > ${DEPLOY_PATH}/${APP_NAME}.pid
+                                """
+                                echo "Deployment successful"
+                            } catch (Exception e) {
+                                echo "Deployment failed: ${e.getMessage()}"
+                                error "Deployment stage failed"
+                            }
+                        }
+                    }
+                }
         
         stage('Verify Deployment') {
             steps {
