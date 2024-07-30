@@ -4,14 +4,13 @@ pipeline {
     environment {
         APP_NAME = 'MSA-Member'
         DEPLOY_PATH = '/opt/springapps/MSA-Member'
-        JENKINS_USER = 'appuser'  // 실제 Jenkins 실행 사용자 이름으로 변경하세요
+        JENKINS_USER = 'appuser'
     }
     
     stages {
         stage('Build') {
             steps {
                 script {
-                    // Maven build 명령 추가 (필요한 경우)
                     sh 'mvn clean package -DskipTests'
                 }
             }
@@ -44,10 +43,29 @@ pipeline {
             }
         }
         
+        stage('Start Application') {
+            steps {
+                script {
+                    try {
+                        sh """
+                            sudo pkill -f ${APP_NAME}.jar || true
+                            sudo -u ${JENKINS_USER} nohup java -jar ${DEPLOY_PATH}/${APP_NAME}.jar > ${DEPLOY_PATH}/${APP_NAME}.log 2>&1 &
+                            echo \$! > ${DEPLOY_PATH}/${APP_NAME}.pid
+                        """
+                        echo "Application started successfully"
+                    } catch (Exception e) {
+                        echo "Application start failed: ${e.getMessage()}"
+                        error "Application start failed"
+                    }
+                }
+            }
+        }
+        
         stage('Verify Deployment') {
             steps {
                 script {
                     sh "ls -l ${DEPLOY_PATH}/${APP_NAME}.jar"
+                    sh "ps aux | grep ${APP_NAME}.jar"
                     echo "Deployment verified"
                 }
             }
