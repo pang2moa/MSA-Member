@@ -94,7 +94,7 @@ pipeline {
                         if [ ! -d "${DEPLOY_PATH}" ]; then
                             echo "Creating deploy directory: ${DEPLOY_PATH}"
                             sudo mkdir -p ${DEPLOY_PATH}
-                            sudo chown userapp:userapp ${DEPLOY_PATH}
+                            sudo chown appuser:appuser ${DEPLOY_PATH}
                             sudo chmod 755 ${DEPLOY_PATH}
                         else
                             echo "Deploy directory already exists: ${DEPLOY_PATH}"
