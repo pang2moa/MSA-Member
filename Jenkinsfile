@@ -49,39 +49,44 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh """
-                            PIDs=\$(pgrep -f "${DEPLOY_PATH}/${APP_NAME}.jar")
-                            if [ ! -z "\$PIDs" ]; then
+                        def processFound = false
+                        def result = sh(script: "pgrep -f '${DEPLOY_PATH}/${APP_NAME}.jar'", returnStatus: true)
+                        
+                        if (result == 0) {
+                            processFound = true
+                            sh """
+                                PIDs=\$(pgrep -f '${DEPLOY_PATH}/${APP_NAME}.jar')
                                 echo "Found processes: \$PIDs"
                                 for PID in \$PIDs
                                 do
                                     echo "Attempting to stop process \$PID"
                                     kill \$PID
-                                    sleep 2
+                                    sleep 5
                                     if ps -p \$PID > /dev/null; then
                                         echo "Process \$PID did not stop, attempting force kill"
                                         kill -9 \$PID
-                                        sleep 1
-                                    fi
-                                    if ! ps -p \$PID > /dev/null; then
-                                        echo "Process \$PID has been terminated"
-                                    else
-                                        echo "Failed to terminate process \$PID"
-                                        exit 1
                                     fi
                                 done
-                            else
-                                echo "No processes found for ${APP_NAME}"
-                            fi
-                        """
-                        echo "Process termination successful"
+                            """
+                        } else {
+                            echo "No processes found for ${APP_NAME}"
+                        }
+
+                        // 모든 프로세스가 종료되었는지 다시 확인
+                        result = sh(script: "pgrep -f '${DEPLOY_PATH}/${APP_NAME}.jar'", returnStatus: true)
+                        if (result == 0) {
+                            error "Failed to terminate all processes for ${APP_NAME}"
+                        } else {
+                            echo "All processes for ${APP_NAME} have been terminated successfully"
+                        }
                     } catch (Exception e) {
-                        echo "Process termination failed: ${e.getMessage()}"
+                        echo "Error during process termination: ${e.getMessage()}"
                         error "Process termination stage failed"
                     }
                 }
             }
         }
+
         
         stage('Deploy') {
             steps {
