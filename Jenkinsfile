@@ -4,6 +4,7 @@ pipeline {
     environment {
         APP_NAME = 'MSA-Member'
         DEPLOY_PATH = '/opt/springapps/MSA-Member'
+        JENKINS_USER = 'appuser'
     }
     
     stages {
@@ -94,8 +95,9 @@ pipeline {
                         if [ ! -d "${DEPLOY_PATH}" ]; then
                             echo "Creating deploy directory: ${DEPLOY_PATH}"
                             sudo mkdir -p ${DEPLOY_PATH}
-                            sudo chown appuser:appuser ${DEPLOY_PATH}
-                            sudo chmod 755 ${DEPLOY_PATH}
+                            sudo cp ${jarFile.path} ${DEPLOY_PATH}/${APP_NAME}.jar
+                            sudo chown ${JENKINS_USER}:${JENKINS_USER} ${DEPLOY_PATH}/${APP_NAME}.jar
+                            sudo chmod 755 ${DEPLOY_PATH}/${APP_NAME}.jar
                         else
                             echo "Deploy directory already exists: ${DEPLOY_PATH}"
                         fi
