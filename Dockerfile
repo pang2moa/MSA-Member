@@ -1,9 +1,14 @@
-# 기반이 될 도커 이미지 선택 (여기서는 OpenJDK 11 사용)
-FROM amazoncorretto:11.0.23
-# 빌드된 스프링 부트 JAR 파일을 복사
-COPY target/*SNAPSHOT.jar app.jar
-# 컨테이너가 실행될 포트 지정
-#EXPOSE 8080
-#ENV TZ=Asia/Seoul
-#RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-ENTRYPOINT ["java","-Xmx400M","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar","--spring.profiles.active=docker"]
+# Use Amazon Corretto 11 as base image
+FROM amazoncorretto:11-alpine-jdk
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the jar file into the container
+COPY target/*.jar app.jar
+
+# Expose the port the app runs on
+EXPOSE 8080
+
+# Run the jar file 
+ENTRYPOINT ["java","-jar","/app/app.jar"]
